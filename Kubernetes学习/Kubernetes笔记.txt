@@ -1,0 +1,1019 @@
+    
+<阿里云镜像加速>
+修改 /etc/docker/daemon.json
+sudo mkdri -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors":["https://fskvstobxx.mirrors.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+
+<gcc安装>
+yum -y install gcc  
+yum -y install gcc-c++ 
+
+<netstat安装> 
+yum -y install net-tools
+
+<vim配置>
+vi ~/.vimrc
+
+set nocompatible
+set backspace=indent,eol,start
+set number
+set history=1000
+set nobackup
+set noswapfile
+set autoindent
+set cindent
+syntax enable
+syntax on
+set t_Co=256
+set ignorecase
+"设置Tab宽度
+set tabstop=4
+"设置自动对齐空格数
+set shiftwidth=4
+"设置按退格键时可以一次删除4个空格
+set softtabstop=4
+"设置按退格键时可以一次删除4个空格
+set smarttab
+"将Tab键自动转换成空格 真正需要Tab键时使用[Ctrl + V + Tab]
+set expandtab
+"启动智能补全
+filetype plugin indent on
+
+1.地址
+139.224.206.9
+root
+HeBiao875973218
+
+2.传输命令
+pscp -P 22 E:\tmp\ftpTmpFiles\test.txt root@139.224.206.9:/root/jd_scripts
+
+pscp -P 22 -r E:\tmp\ftpTmpFiles root@139.224.206.9:/root/jd_scripts
+
+3.查找文件
+find / -name jd_bean_sign.js
+
+4.镜像文件目录
+/var/lib/docker/overlay2
+
+ls -l 显示创建时间
+
+5.乱码问题
+当前系统语言
+echo $LANG
+
+查看是否安装中文包
+locale
+
+安装中文包(使用apt-get,不能使用yum)
+apt-get install language-pack-zh-hans -y
+
+docker-compose logs
+
+
+6.FileZilla连接阿里云上传文件
+sftp://139.224.206.9
+root
+HeBiao875973218
+
+
+6.5京东cookie
+JD_COOKIE环境变量&隔开,每个key带;
+CookieJDs数组,隔开,使用'',每个key带;
+
+
+7.重启docker
+启动:
+docker-compose start
+
+配置生效
+docker-compose up -d
+
+关闭
+docker-compose down
+
+docker-compose stop
+
+docker-compose restart
+
+日志:
+docker-compose logs
+
+docker-compose pull
+
+查看镜像
+ docker images
+ 
+查看所有容器
+docker ps -a
+
+查看账号是否生效:
+vi jd_crazy_joy_coin.log
+
+
+京东互助码: sharecodeCollection.log
+
+
+
+8.个人简历
+html上传路径:
+/data/wwwroot/default/resume
+
+访问路径:
+http://139.224.206.9/resume
+
+
+9.常用linux命令
+查看详细信息   ls -l
+显示出所有的java进程，去处掉当前的grep进程  ps -ef|grep java|grep -v grep
+通过进程名查看进程   ps -ef |grep ai-diagnosis-3.0.0
+查看指定PID的进程 top -p 4954
+杀死进程 kill -9 23656 
+
+查看前几行:
+head -n 10 diagnosis.log 
+
+
+vi编辑器:
+head -n 100 diagnosis.log 
+
+
+<docker>
+安装
+yum install -y -yum-utils device-mapper-persistent-data lvm2
+
+指定阿里云安装源:
+wget http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+yum -y install docker-ce
+
+或: curl -sSL https://get.daocloud.io/docker | sh
+
+启动服务
+service docker start
+
+版本: docker version
+
+启动测试容器: docker run hello-world
+
+版本: docker -v
+启动: docker run -i -t -v /root/software/:/mnt/software/ 75835a67d134 /bin/bash
+内外端口映射(外8000=>内8080): docker run -p 8080:8080 tomcat
+	后台运行: docker run -p 8000:8080 -d tomcat
+	命名: docker run -p 8000:8080 --name web -d tomcat
+	查看端口: netstat -tulpn
+	进入tomcat容器内部: docker exec -it 14cff58b1e9e /bin/bash
+	重启容器: docker restart 14cff58b1e9e
+	退出: exit
+	查看内核版本: cat /proc/version
+docker镜像目录: /var/lib/docker
+	
+查看运行的容器: docker ps
+
+docker create + docker start  <=> docker run
+docker ps   # 查看运行中的容器
+			-a 全部容器
+docker pull<:tags> 拉取镜像
+docker rmi <-f>镜像id  删除镜像
+docker ps -a    # 查看所有容器
+按Ctrl+D     # 退出容器 即可退出当前容器【但退出后会停止容器】
+组合键：Ctrl+P+Q    # 退出不停止容器：
+docker start 容器名或ID     # 启动容器
+docker exec -it 8e69a8757b96 /bin/bash 容器名或ID    # 进入容器
+docker kill 容器名或ID  	#杀死容器
+docker stop 容器名或ID      # 停止容器
+docker pause 容器名或ID     # 暂停容器
+docker unpause 容器名或ID   # 继续容器
+docker rm <-f> 容器名或ID    # 删除容器
+docker stop $(docker ps -q) & docker rm $(docker ps -aq)  # 删除全部容器--慎用
+docker commit 容器ID 镜像名称   # 保存容器，生成镜像
+docker cp /home/soft centos:/webapp   #从 host 拷贝文件到 container 里面
+docker inspect 容器名或ID   # 查看容器属性信息,有虚拟IP显示
+
+Dockerfile创建镜像:
+docker build -t hebiao/resume:1.0.0 ./
+
+启动: docker run -p 8080:8080 --name resume hebiao/resume:1.0.0
+
+centos: 创建后会自动退出,需要进入交互模式,并后台运行
+docker run -d -p 2202:2202 --name database -it centos /bin/hash
+
+tomcat 连接到数据库:
+docker run -d -p 8080:8080 --name resume --link database hebiao/resume:1.0.0
+
+网络服务明细:
+docker network ls
+
+创建网桥:
+docker network create -d bridge my-bridge
+
+连接容器到网桥,网桥分组:
+docker network connect my-bridge resume
+docker network connect my-bridge database
+
+
+volumes共享容器,使容器间共享代码:
+docker create --name shareresume -v /root/docker-resume:/usr/local/tomcat/webapps tomcat /bin/true
+
+运行容器:
+docker run -d -p 8080:8080 --volumes-from shareresume --name resume1 tomcat
+
+
+docker-compose 安装:
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+docker-compose --version
+
+<K8s>
+CentOS7镜像
+D:\Uprograms\VMware\linux\
+CentOS-7-x86_64-DVD-1908.iso
+
+linux 密码:
+root/root
+
+-----环境准备-----
+master/base: 192.168.172.111
+node1: 192.168.172.112
+node2: 192.168.172.113
+
+
+0.配置虚拟机ip
+1> vi /etc/sysconfig/network-scripts/ifcfg-ens33 :
+
+TYPE=Ethernet
+BOOTPROTO=dhcp
+DEFROUTE=yes
+PEERDNS=yes
+PEERROUTES=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_PEERDNS=yes
+IPV6_PEERROUTES=yes
+IPV6_FAILURE_FATAL=no
+NAME=eno16777736
+UUID=ae05ccde-6a29-4332-b486-f3042da73ac0
+DEVICE=eno16777736
+ONBOOT=no
+
+修改：
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=static  #静态ip
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=ens33
+UUID=c500a478-a621-42d4-b50e-1bd710003939
+DEVICE=ens33
+ONBOOT=yes		#开机启动
+IPV6_PRIVACY=no
+
+#static assignment
+NM_CONTROLLED=no #表示该接口将通过该配置文件进行设置，而不是通过网络管理器进行管理
+IPADDR=192.168.172.111 #本机地址
+NETMASK=255.255.255.0 #子网掩码
+GATEWAY=192.168.172.2 #默认网关
+DNS1=114.114.114.114	#DNS
+
+2> service network restart
+
+3> windows IP设置
+1- 控制面板——〉网络和 Internet——〉网络连接
+2- 选择VMware Network Adapter VMnet8——〉右键属性
+点击internet协议版本4（TCP/IPv4）
+点击输入使用下面的IP地址（S）
+输入IP地址：192.168.172.10
+子网掩码：255.255.255.0
+默认网关：192.168.172.2
+首选DNS服务器（P）：114.114.114.114
+确定再确定保存
+
+注: yum配置阿里源:
+下载: http://mirrors.aliyun.com/repo/Centos-7.repo
+改名为: /etc/yum/repos.d/CentOS-Base.repo 
+mkdir /etc/yum/repos.d/back
+mv /etc/yum/repos.d/* /etc/yum/repos.d/back
+mkdir repos.d
+FileZiila导入CentOS-Base.repo
+yum clean all && yum makecache
+yum -y update
+
+
+
+或:
+yum-config-manager --add-repo http://mirrors.163.com/.help/CentOS7-Base-163.repo
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+1.时区与主机名设置
+timedatectl set-timezone Asia/Shanghai
+
+hostnamectl set-hostname master
+hostnamectl set-hostname node1
+hostnamectl set-hostname node2
+
+2.添加hosts网络主机配置,都设置
+vi /etc/hosts
+192.168.172.111 master
+192.168.172.112 node1
+192.168.172.113 node2
+
+
+3.关闭swap分区 、修改内核模块 、防火墙 、selinux等
+swap:
+1. 临时关闭 swapoff -a
+2. 永久禁用 注释掉/etc/fstab文件中“/dev/mapper/centos-swap”这一行：
+3. 重新加载：
+   sysctl --system
+ 
+ 
+修改内核模块-配置网桥:
+配置k8s.conf文件（#k8s.conf文件原来不存在，需要自己创建的）
+vi /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1    
+vm.swappiness=0
+ 
+防火墙：
+systemctl stop firewalld
+systemctl disable firewalld
+ 
+关闭selinux：
+1. 临时 setenforce 0
+2. 永久关闭
+vi /etc/sysconfig/selinux
+SELINUX=enforcing
+替换为
+SELINUX=disabled
+
+
+4.准备k8s.repo, docker-ce.repo 放在 /etc/yum.repos.d 目录，
+vi k8s.repo :
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+
+
+
+vi docker-ce.repo :
+[docker-ce-edge]
+name=Docker CE Edge - $basearch
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/7/$basearch/edge
+enabled=0
+gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+ 
+[docker-ce-edge-debuginfo]
+name=Docker CE Edge - Debuginfo $basearch
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/7/debug-$basearch/edge
+enabled=0
+gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+ 
+[docker-ce-edge-source]
+name=Docker CE Edge - Sources
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/7/source/edge
+enabled=0
+gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+ 
+[docker-ce-test]
+name=Docker CE Test - $basearch
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/7/$basearch/test
+enabled=0
+gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+ 
+[docker-ce-test-debuginfo]
+name=Docker CE Test - Debuginfo $basearch
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/7/debug-$basearch/test
+enabled=0
+gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+ 
+[docker-ce-test-source]
+name=Docker CE Test - Sources
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/7/source/test
+enabled=0
+gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+ 
+[docker-ce-nightly]
+name=Docker CE Nightly - $basearch
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/7/$basearch/nightly
+enabled=0
+gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+ 
+[docker-ce-nightly-debuginfo]
+name=Docker CE Nightly - Debuginfo $basearch
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/7/debug-$basearch/nightly
+enabled=0
+gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+ 
+[docker-ce-nightly-source]
+name=Docker CE Nightly - Sources
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/7/source/nightly
+enabled=0
+gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+
+刷新yum:
+yum clean all && yum makecache
+yum -y update
+
+5. 安装组件
+yum install kubelet-1.14.0-0 -y && yum install kubectl-1.14.0-0 -y && yum install kubeadm-1.14.0-0 -y
+
+
+6. 安装docker设置开机启动，并启动服务
+
+配置docker源
+wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O /etc/yum.repos.d/docker-ce.repo
+安装依赖包
+yum install -y yum-utils device-mapper-persistent-data lvm2
+设置从stable仓库获取docker
+yum-config-manager --add-repo  https://download.docker.com/linux/centos/docker-ce.repo
+安装Docker
+yum install docker-ce-18.09.9 docker-ce-cli-18.09.9 containerd.io -y
+
+systemctl enable docker
+systemctl enable kubelet.service
+systemctl start docker
+systemctl start kubelet
+
+
+7. 下载镜像
+vi pull.sh :
+#!/bin/bash
+url=registry.cn-hangzhou.aliyuncs.com/google_containers #阿里云镜像仓库地址，可以按需修改
+version=v1.14.0 #安装的kubernetes的版本（可以按需修改）
+images=(`kubeadm config images list --kubernetes-version=$version|awk -F '/' '{print $2}'`)
+for imagename in ${images[@]} ; do
+  docker pull $url/$imagename
+  docker tag $url/$imagename k8s.gcr.io/$imagename
+  docker rmi -f $url/$imagename
+done
+
+
+chmod +x pull.sh
+./pull.sh
+
+docker images | grep k8s
+
+8. 初始化master节点(master节点操作, --pod-network-cidr为虚拟ip,跟kube-flannel.yml中ip配置一致)
+kubeadm init --kubernetes-version=v1.14.0 --pod-network-cidr=10.244.0.0/16
+输出:
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 192.168.172.111:6443 --token lz9dc3.avs3y7wfqk2xbbzy \
+    --discovery-token-ca-cert-hash sha256:aa8b6fa0cae37cac1f2c88136ae1594514d0e9d3e2c21acb2694b1a6717be257
+
+重置:
+kubeadm reset
+
+9. 执行以下命令配置kubectl，作为普通用户管理集群并在集群上工作（master节点操作）
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+10. 部署flannel pod网络（master节点操作）
+wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+版本号 v0.12.0
+下载不下来直接使用:  E:\学海无涯\mashibingP8\06 马老师 架构师高级技能kubernetes入门到精通【更新完】\Kubernetes学习\kube-flannel.yml
+下载不下来镜像,直接去官网下载,再docker load
+docker load < flanneld-v0.12.0-amd64.docker
+
+创建
+kubectl apply -f kube-flannel.yml
+
+卸载:
+kubectl delete -f kube-flannel.yml
+
+注: 查看错误
+kubectl logs -f kube-controller-manager-master -n kube-system
+
+
+11. 查看pod 、主机 （master节点操作）
+kubectl get pods --all-namespaces
+kubectl get nodes
+ 
+ 
+节点输出如下：
+[root@master181 work]# kubectl get nodes
+NAME                 STATUS   ROLES    AGE   VERSION
+master.ctpd.com   Ready    master   82m   v1.14.0
+
+12. 加入节点（work节点操作）
+执行第8步中输出的命令:
+kubeadm join 192.168.172.111:6443 --token lz9dc3.avs3y7wfqk2xbbzy \
+    --discovery-token-ca-cert-hash sha256:aa8b6fa0cae37cac1f2c88136ae1594514d0e9d3e2c21acb2694b1a6717be257
+
+可以查看节点来确定是否加入成功:
+kubectl  get nodes
+
+
+13. 部署dashboard（master节点操作）
+1> 下载kubernetes-dashboard.yaml文件
+wget https://github.com/xiliangMa/restapi/raw/master/k8s/dashboard/kubernetes-dashboard.yaml
+或
+wget https://github.com/zhukexingkong/restapi/raw/master/k8s/dashboard/kubernetes-dashboard.yaml
+
+注:下载不了使用: E:\学海无涯\mashibingP8\06 马老师 架构师高级技能kubernetes入门到精通【更新完】\Kubernetes学习\kubernetes-dashboard.yaml
+kubectl apply -f recommended.yaml
+
+2> 检查Kubernetes Dashboard运行情况
+kubectl create -f kubernetes-dashboard.yaml 
+
+3>创建管理员角色
+vi admin-rple.yaml
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dashboard-admin
+  namespace: kube-system
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: dashboard-admin
+subjects:
+  - kind: ServiceAccount
+    name: dashboard-admin
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+
+
+kubectl create -f admin-rple.yaml
+
+获取dashboard secret
+kubectl get secret -n kube-system
+
+找到刚才创建的角色,获取token
+kubectl describe secret dashboard-admin-token-jjbhb -n kube-system
+
+输出:
+eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkYXNoYm9hcmQtYWRtaW4tdG9rZW4tampiaGIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGFzaGJvYXJkLWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiNGZlOTc1NjEtZDc0Zi0xMWViLTg0MzYtMDAwYzI5Y2M4ODE1Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmUtc3lzdGVtOmRhc2hib2FyZC1hZG1pbiJ9.SqwJpUf1WCVrlDve4HfrqYwjI_K8ZdSlEJ70rHWme2Bs1vIK3_sX5OgwPAlh5zxIowtAMQGMiKmdvS06Rvx-MKn5BvEDZeQL3FXc2n9BVSgNcAd9zr2eZnI2DvviYy2zDQqbLS7pgH7ywF3P2XnUkJX_QvGmb-BzuHX5wN8UdYHHTaCYzCAZD6fUI3-2OmeXIDOWErYGzv3Lx3XIpJrt4COdehCB1iA9MMXrE5tZl4Bx_bUgR0tYhzNiTnuXq1vg4z4tNkAINLbdadptUFxPzIeXWYVLdrU9XYDC14a_45WqF81MS4bEYg5mcZCvK8Ufw1nxkSHTN5zWXMAmq5icUw
+
+注:普通登录,无法部署
+kubectl -n kube-system describe $(kubectl -n kube-system get secret -n kube-system -o name| grep namespace) | grep token
+
+4> 访问: 一定是https, 带s
+https://192.168.172.111:30001
+
+并输入Token
+
+
+注:删除已经部署的Dashboard
+kubectl delete ns kubernetes-dashboard
+
+5> 可以控制角色
+kubectl apply -f kubernetes-dashboard-admin.rbac.yaml
+
+可以获取系统命名空间
+kubectl -n kube-system get svc
+
+6> 部署镜像
+工作负载->创建->创建应用
+
+14.Deployment 部署脚本
+1> tomcat-deploy.yml文件, 不能使用tab
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tomcat-deploy  # 部署名称
+spec:
+  replicas: 2  # 容器个数
+  template:  # 容器模板
+    metadata:
+      labels:
+        app: tomcat-cluster  # pod名称
+    spec:
+      containers:
+      - name: tomcat-cluster  # 容器名称
+        image: tomcat:latest  # 镜像,+tag
+        ports:
+        - containerPort: 8080  # 容器内部暴露端口
+		
+2>常用命令
+创建部署: -f 指向文件
+kubectl create -f deploy.yml
+创建/更新部署配置
+kubectl apply -f deploy.yml
+查看已部署pod: 显示pod名称
+kubectl get pod [-o wide]
+查看pod详细信息: + pod名称
+kubectl describe pod my-tomcat-6d9867c99d-n2g6p
+查看pod输出日志: + pod名称
+kubectl logs [-f] my-tomcat-6d9867c99d-n2g6p
+
+3>过程
+mkdir k8s # 进去
+mkdir tomcat-deploy
+vi tomcat-deploy.yml
+kubectl create -f tomcat-deploy.yml
+查看所有部署
+kubectl get deployment
+查看所有pod
+kubectl get pod -o wide
+
+name		READY
+pod名称		1/1   # 后面的1表示pod内容器总数
+查看pod详细信息
+kubectl describe pod pod名称
+Events:
+	拉取镜像
+
+
+
+
+
+15.外部访问Tomcat集群(NodePort方式)
+在master节点配置tomcat-service
+mkdir tomcat-service
+vi tomcat-service.yml :
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tomcat-service   # 部署名称
+  labels: 
+    app: tomcat-service  # pod名称
+spec:
+  type: NodePort  # 节点端口,端口映射
+  selector: 
+    app: tomcat-cluster  # 对应tomcat-deploy pod名称,绑定,形成类似nginx代理
+  ports:
+  - port: 8000          # 服务端口
+    targetPort: 8080    # 需要映射的节点端口
+    nodePort: 32500     # 每个节点node1/node2对外暴露端口
+
+kubectl create -f tomcat-service.yml
+获取service列表
+kubectl get service
+
+查看service详细信息
+kubectl describe service service名称
+
+16.基于NFS实现集群文件共享
+1> 服务提供方-master
+安装
+yum install -y nfs-utils rpcbind
+
+cd /usr/local/
+mkdir data  进入
+mkdir www-data  进入
+
+暴露文件目录
+vi /etc/exports :
+/usr/local/data/www-data 192.168.172.111/24(rw,sync)        # 读写,同步写入
+
+启动服务
+systemctl start nfs.service
+systemctl enable nfs.service        # 开机启动
+systemctl start rpcbind.service
+systemctl enable rpcbind.service    # 开机启动
+
+查看
+exportfs
+
+
+2> 节点使用共享文件
+安装
+yum install -y nfs-utils
+
+查看主服务器共享文件挂载点
+showmount -e 192.168.172.111
+
+
+挂载
+mount 192.168.172.111:/usr/local/data/www-data /mnt    # 挂载到本机 /mnt 目录
+
+测试
+在master节点创建test.txt, 2个节点均可看到
+
+17.pod中部署配置挂载点
+1> 删除原来部署的deploy/service
+kubectl delete deployment tomcat-deploy
+kubectl delete service tomcat-service
+
+2>修改yml文件,创建
+tomcat-deploy.yml :
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tomcat-deploy  # 部署名称
+spec:
+  replicas: 2  # 容器个数
+  template:  # 容器模板
+    metadata:
+      labels:
+        app: tomcat-cluster  # pod名称
+    spec:
+      volumes:          # 数据卷
+      - name: web-app
+        hostPath:
+          path: /mnt    # 容器所在node主机的目录
+      containers:
+      - name: tomcat-cluster  # 容器名称
+        image: tomcat:latest  # 镜像,+tag
+        ports:
+        - containerPort: 8080  # 容器内部暴露端口
+        volumeMounts:         # 挂载点
+        - name: web-app       # 与上面数据卷一致
+          mountPath: /usr/local/tomcat/webapps        # 容器的目录 -> /mnt -> 192.168.172.111:/usr/local/data/www-data
+    
+    
+kubectl create -f tomcat-deploy.yml
+
+3> 验证
+进入容器,到webapp内查看
+docker exec -it 47b235f709d3 /bin/bash
+
+或: 在master
+kubectl get pod -o wide
+kubectl exec -it tomcat-deploy-6678dccdc9-mfp75 /bin/bash
+
+
+18.利用Rinted对外提供Service负载均衡支持
+使用master的IP+端口访问node,不再输入node 的 IP +端口
+
+1>修改tomcat-service.yml : 注释暴露的端口
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tomcat-service   # 部署名称
+  labels: 
+    app: tomcat-service  # pod名称
+spec:
+#  type: NodePort
+  selector: 
+    app: tomcat-cluster  # 对应tomcat-deploy pod名称,绑定,形成类似nginx代理
+  ports:
+  - port: 8000          # 服务端口
+    targetPort: 8080    # 需要映射的节点端口
+#    nodePort: 32500
+
+
+kubectl create -f tomcat-service.yml
+kubectl get service
+
+2> 验证
+cd /usr/local/data/www-data
+mkdir test  进入
+vi index.jsp :
+<%=request.getLocalAddr()%>
+
+负载均衡: 随机分配
+curl 10.111.7.17:8000/test/index.jsp
+
+3> Rinetd端口转发,外部访问: master
+解决: 10.111.7.17:8000/test/index.jsp 外部无法访问
+
+1-安装Rinetd
+cd /usr/local
+wget http://www.boutell.com/rinetd/http/rinetd.tar.gz   -- 已失效
+使用: E:\学海无涯\mashibingP8\06 马老师 架构师高级技能kubernetes入门到精通【更新完】\Kubernetes学习\rinetd.tar.gz
+mkdir rinetd
+tar -zxvf rinetd.tar.gz -C ./rinetd
+cd rinetd
+      可修改端口映射范围:   sed -i 's/65536/65535/g' rinetd.c
+mkdir -p /usr/man/
+make && make install
+
+
+2-配置文件
+vi /etc/rinetd.conf :
+
+0.0.0.0 8000 10.111.7.17 8000
+
+注:
+说明一下（0.0.0.0表示本机绑定所有可用地址）
+将所有发往本机8080端口的请求转发到172.19.94.3的8080端口
+将所有发往本机9090端口的请求转发到192.168.0.103的3389端口
+将所有发往1.2.3.4的80端口请求转发到192.168.0.10的80端口　
+
+3-启动
+pkill rinetd                 #关闭进程
+rinetd -c /etc/rinetd.conf   #启动转发
+
+4-查看转态
+netstat -antup
+
+4>外部访问
+http://192.168.172.111:8000/test/index.jsp
+
+19.更新集群配置与资源限定
+更新集群配置
+kubectl apply -f yml文件
+
+删除部署和service
+kubectl delete deployment / service  名称
+
+资源限定
+    containers:
+      - name: tomcat-cluster  # 容器名称
+        image: tomcat:latest  # 镜像,+tag
+        resources:
+          requests:     # 至少
+            cpu: 0.5    # 单位: 核
+            memory: 200Mi
+          limits:       # 最多
+            cpu: 1 
+            memory: 500Mi
+数量修改:
+spec:
+  replicas: 3  # 容器个数
+
+20.贝亲商城K8S实战--构建NFS文件共享
+1>文件准备: 可用其他文件替换
+beiqin/dist:
+beiqin-app.jar          # 自带tomcat
+application.yml
+
+beiqin/sql:
+beiqin.sql              # 建库建表
+
+2> vi /etc/exports : master 节点共享文件
+/usr/lccal/beiqin/dist 192.168.172.111/24(rw, sync)
+/usr/lccal/beiqin/sql 192.168.172.111/24(rw, sync)
+
+重启服务
+systemctl restart nfs.service
+
+3> node1挂载节点
+mount 192.168.172.111:/usr/local/beiqin/dist /usr/local/beiqin-dist
+mount 192.168.172.111:/usr/local/beiqin/sql /usr/local/beiqin-sql
+
+21.贝亲商城K8S实战-部署并初始数据库
+1> 部署sql脚本 master
+cd /usr/lccal/beiqin
+vi beiqin-db-deploy.yml :
+
+apiVersion: apps/v1beta1        # apps k8s 1.6版本支持
+kind: Deployment
+metadata:
+  name: beiqin-db-deploy  # 部署名称
+spec:
+  replicas: 1  # 容器个数
+  template:  # 容器模板
+    metadata:
+      labels:
+        app: beiqin-db-deploy  # pod名称
+    spec:
+      volumes:          # 数据卷
+      - name: beiqin-db-volume
+        hostPath:
+          path: /usr/local/beiqin-sql    # 容器所在node主机的目录
+      containers:
+      - name: beiqin-db-deploy  # 容器名称
+        image: mysql:5.7  # 镜像,+tag
+        ports:
+        - containerPort: 3306  # 容器内部暴露端口
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "root"
+        volumeMounts:         # 挂载点
+        - name: beiqin-db-volume       # 与上面数据卷一致
+          mountPath: /docker-entrypoint-initdb.d        # docker初始化脚本目录
+          
+kubectl create -f beiqin-db-deploy.yml
+
+验证:
+kubectl exec -it beiqin-db-deploy-c7785f9d4-r7h9f /bin/bash
+mysql -uroot -p
+show database
+show tables
+select count(*) from table_name
+
+2> sql service master
+vi beiqin-db-service.yml :
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: beiqin-db-service   # 部署名称
+  labels: 
+    app: beiqin-db-service  # pod名称
+spec:
+  selector: 
+    app: beiqin-db-deploy  # 对应tomcat-deploy pod名称,绑定,形成类似nginx代理
+  ports:
+  - port: 3310          # 对外暴露端口
+    targetPort: 3306    # 需要映射的节点端口
+
+    
+kubectl create -f beiqin-db-service.yml
+
+22.贝亲商城K8S实战-部署Web应用
+1> 部署web应用
+vim beiqin-app-deploy.yml
+
+apiVersion: apps/v1beta1        # apps k8s 1.6版本支持
+kind: Deployment
+metadata:
+  name: beiqin-app-deploy  # 部署名称
+spec:
+  replicas: 2  # 容器个数
+  template:  # 容器模板
+    metadata:
+      labels:
+        app: beiqin-app-deploy  # pod名称
+    spec:
+      volumes:          # 数据卷
+      - name: beiqin-app-volume
+        hostPath:
+          path: /usr/local/beiqin-dist    # 容器所在node主机的目录
+      containers:
+      - name: beiqin-app-deploy  # 容器名称
+        image: openjdk:8u222-jre  # 镜像,+tag
+        command: ["/bin/sh","-c"]        # 使用bash脚本
+        args: [ "cd /usr/local/beiqin-dist;java -jar beiqin-app.jar"]      # 操作命令
+        volumeMounts:         # 挂载点
+        - name: beiqin-app-volume       # 与上面数据卷一致
+          mountPath: /usr/local/beiqin-dist   # 容器的目录
+
+          
+更改数据库名:
+application.yml :
+#数据库连接改为：
+jdbc:mysql://beiqin-db-service:3310/beiqin?useUnicode=true&characterEncoding=utf-8&useSSL=false
+
+          
+kubectl create -f beiqin-app-deploy.yml
+
+验证:
+curl 10.111.1.97/goods?gid=1111
+
+2> 部署web service
+vim beiqin-app-service.yml :
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: beiqin-app-service   # 部署名称
+  labels: 
+    app: beiqin-app-service  # pod名称
+spec:
+  selector: 
+    app: beiqin-app-deploy  # 对应tomcat-deploy pod名称,绑定,形成类似nginx代理
+  ports:
+  - port: 80          # 对外暴露端口, http默认端口
+    targetPort: 80    # 需要映射的节点端口
+
+kubectl create -f beiqin-app-service.yml
+
+3> web应用端口转发:
+配置文件
+vi /etc/rinetd.conf :
+
+0.0.0.0 80 10.111.1.97 80
+
+加载生效:
+rinetd -c /etc/rinetd.conf
+
+
+4> 测试web项目
+192.168.172.112/goods?gid=1111
+
+
+
